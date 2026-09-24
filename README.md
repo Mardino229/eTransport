@@ -13,14 +13,6 @@ Application de suivi des bus en temps réel, de recommandation de trajets et d'a
 
 ---
 
-## Présentation du projet
-
-Cette application répond à deux besoins principaux :
-1. **Pour les étudiants** : Connaître le bus le plus proche, son heure d'arrivée estimée et les places disponibles à bord.
-2. **Pour les gestionnaires** : Suivre l'affluence du réseau, repérer les lignes saturées aux heures de pointe et adapter la flotte de bus.
-
----
-
 ## Lancement en local
 
 ### Prérequis
@@ -111,9 +103,9 @@ Analyse les données du réseau et propose des actions chiffrées :
 
 ### 4. Données manquantes du terrain
 
-1. **Emplois du temps des amphis UAC** : Permettrait de programmer des départs de bus synchronisés avec la fin des cours et des examens.
-2. **Historique des trajets étudiants** : Permettrait d'anticiper la demande par quartier dès le début du semestre.
-3. **Données météo locales** : Utile pour ajuster la flotte lors des fortes pluies qui modifient l'affluence aux arrêts.
+1. **Mode d'équipement réel des bus** : On ne sait pas si la flotte du COUS-AC dispose de boîtiers GPS IoT dédiés, d'une application smartphone chauffeur ou d'un fournisseur GPS tiers. Le mode de collecte des positions devra être adapté selon l'équipement réel.
+2. **Heure d'arrivée exacte des étudiants à l'arrêt** : Sans système de validation à l'arrêt (ex: scan de QR code ou caméra de comptage), il est impossible de savoir à quel moment précis un étudiant arrive à la station et combien de temps il y a réellement attendu. Le temps d'attente calculé reste donc une estimation.
+3. **Planning des cours et examens de l'UAC** : Permettrait de programmer des départs de bus synchronisés avec la fin des cours pour éviter l'engorgement soudain des arrêts du campus.
 
 ### 5. Mise en production (Première itération sur le terrain)
 
