@@ -90,7 +90,7 @@ Analyse les données du réseau et propose des actions chiffrées :
 ### 2. Dette technique
 
 - **Authentification** : Les endpoints de l'API sont actuellement ouverts pour simplifier les tests du prototype. Une gestion par jetons JWT devra être ajoutée pour sécuriser les accès.
-- **Modèle de trafic routier** : La vitesse des bus est fixe (32 km/h en moyenne). Le modèle ne prend pas encore en compte les variations fines d'embouteillages par tronçon.
+- **Modèle de trafic routier** : La vitesse des bus est fixe (32 km/h en moyenne). Le modèle ne prend pas encore en compte les variations fines d'embouteillages par tronçon. 
 - **Tests automatisés** : Les validations ont été effectuées manuellement et via des requêtes de test. L'ajout d'une suite de tests automatisés (Pytest) sécurisera les futures évolutions.
 
 ### 3. Passage à l'échelle (50 000 étudiants et 300 bus)
@@ -104,11 +104,11 @@ Analyse les données du réseau et propose des actions chiffrées :
 ### 4. Données manquantes du terrain
 
 1. **Mode d'équipement réel des bus** : On ne sait pas si la flotte du COUS-AC dispose de boîtiers GPS IoT dédiés, d'une application smartphone chauffeur ou d'un fournisseur GPS tiers. Le mode de collecte des positions devra être adapté selon l'équipement réel.
-2. **Heure d'arrivée exacte des étudiants à l'arrêt** : Sans système de validation à l'arrêt (ex: scan de QR code ou caméra de comptage), il est impossible de savoir à quel moment précis un étudiant arrive à la station et combien de temps il y a réellement attendu. Le temps d'attente calculé reste donc une estimation.
-3. **Planning des cours et examens de l'UAC** : Permettrait de programmer des départs de bus synchronisés avec la fin des cours pour éviter l'engorgement soudain des arrêts du campus.
+2. **Heure d'arrivée exacte des étudiants à l'arrêt** : Sans système de validation à l'arrêt (ex: scan de QR code à l'arrivée), il est impossible de savoir à quel moment précis un étudiant arrive à la station et combien de temps il y a réellement attendu. Le temps d'attente calculé reste donc une estimation.
+4. **Historique des trajets étudiants** : Permettrait d'anticiper la demande par arrêt et de mieux répartir les bus avant la formation des files d'attente.
 
 ### 5. Mise en production (Première itération sur le terrain)
 
-1. **Phase 1 (Pilote sur 1 ligne)** : Équiper 5 bus sur la ligne Akpakpa - UAC et ouvrir l'application à un groupe restreint d'étudiants.
+1. **Phase 1 (Pilote sur 1 ligne)** : Équiper 5 bus sur la ligne Akpakpa - UAC et ouvrir la plateforme à un groupe restreint d'étudiants.
 2. **Phase 2 (Ajustements)** : Vérifier l'écart entre les ETAs affichés et le terrain, puis ajuster les coefficients de la fonction de score.
 3. **Phase 3 (Déploiement général)** : Étendre le système aux autres lignes une fois la première phase validée.
