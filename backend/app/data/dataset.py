@@ -1,11 +1,9 @@
 """
-SOURCE UNIQUE DE VÉRITÉ (Single Source of Truth) pour le réseau COUS-AC (Université d'Abomey-Calavi).
 
 Toutes les informations sur les 15 arrêts, 14 lignes et 35 bus sont centralisées ici.
-Aucune coordonnée ou configuration ne doit être dupliquée en dur ailleurs dans le projet.
 """
 
-# ─── 1. Les 15 Arrêts Officiels COUS-AC 
+# 1. Les 15 Arrêts Officiels COUS-AC 
 STOPS = {
     "STOP_UAC": {
         "id": "STOP_UAC",

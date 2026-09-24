@@ -308,8 +308,6 @@ async def simulate_bus(bus_state: BusState, redis: aioredis.Redis, db_pool: asyn
     2. Met à jour la mémoire vive Redis (`bus:<id>`) et publie dans le canal `bus_updates`.
     3. Persiste les événements de flux de passagers dans PostgreSQL lors des arrêts.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Permet la simulation parallèle, fluide et sans blocage des 35 bus simultanément sur le réseau UAC.
     """
     await asyncio.sleep(random.uniform(0, 2))
@@ -381,13 +379,10 @@ async def simulate_bus(bus_state: BusState, redis: aioredis.Redis, db_pool: asyn
 
 async def seed_database(db_pool: asyncpg.Pool):
     """
-    Ce que fait cette fonction :
-    -----------------------------
+
     Exécute des requêtes SQL `INSERT ... ON CONFLICT DO UPDATE` pour peupler ou mettre à jour
     les tables `stops`, `routes` et `buses` dans PostgreSQL avec les 15 arrêts et 14 lignes réelles.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Garantit l'existence et la cohérence de la base de données relationnelle au démarrage du système,
     évitant toute erreur de contrainte de clé étrangère (`foreign key error`).
     """
@@ -495,13 +490,10 @@ async def enrich_routes_with_osrm():
 
 async def main():
     """
-    Ce que fait cette fonction :
-    -----------------------------
+
     Point d'entrée principal du module simulateur. Démarre la connexion Redis, le pool PostgreSQL,
     lance `enrich_routes_with_osrm()`, `seed_database()`, instancie les 35 bus et lance les coroutines en parallèle.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Orchestre l'ensemble de la couche de simulation.
     """
     print("[SIMULATOR] Démarrage du simulateur...")

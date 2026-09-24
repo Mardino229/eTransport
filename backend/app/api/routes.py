@@ -57,14 +57,11 @@ def get_network_routes():
 )
 def get_buses_live(redis: redis_lib.Redis = Depends(get_redis)):
     """
-    Ce que fait cette fonction :
-    -----------------------------
+
     Point d'entrée REST HTTP GET `/api/v1/buses/live`.
     Interroge Redis et retourne la liste instantanée des bus avec positions GPS, vitesses,
     places disponibles et taux de remplissage.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Permet le chargement initial de la carte interactive et sert de système de secours (polling)
     si la connexion WebSocket réseau est interrompue.
     """
@@ -80,14 +77,11 @@ def get_buses_live(redis: redis_lib.Redis = Depends(get_redis)):
 )
 def get_stop_analytics(stop_id: str, db: Session = Depends(get_db)):
     """
-    Ce que fait cette fonction :
-    -----------------------------
+
     Point d'entrée REST HTTP GET `/api/v1/stops/{stop_id}/analytics`.
     Reçoit un identifiant d'arrêt (ex: `STOP_UAC`) et retourne les statistiques agrégées des flux
     de voyageurs enregistrés sur les dernières 24 heures.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Alimente les fiches analytiques par station dans le tableau de bord de gestion du COUS-AC.
     """
     try:
@@ -109,8 +103,6 @@ def get_top5_routes(db: Session = Depends(get_db)):
     Point d'entrée REST HTTP GET `/api/v1/routes/top5`.
     Calcule et renvoie le classement des 5 lignes de transport universitaire les plus fréquentées.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Fournit les données visualisées sous forme de graphique à barres dans la section Analytics du dashboard.
     """
     return analytics_svc.get_top5_routes(db)
@@ -133,8 +125,6 @@ def get_recommendation(
     Traite la demande d'un étudiant (position GPS, arrêt de destination), calcule le bus optimal,
     effectue la réservation atomique d'un siège et renvoie le résultat accompagné de 3 bus alternatifs.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Forme l'interface d'entrée du moteur de guidage personnalisé pour les étudiants de l'UAC.
     """
     try:
@@ -160,8 +150,6 @@ def get_optimization_suggestions(db: Session = Depends(get_db)):
     Génère un rapport synthétique contenant les actions d'optimisation préconisées
     (ajout de bus, réajustement des départs, fusion de lignes) et les zones de congestion (hotspots).
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Alimente le panneau décisionnel d'aide à la régulation pour les autorités du transport universitaire.
     """
     return analytics_svc.get_optimization_suggestions(db)
@@ -170,14 +158,11 @@ def get_optimization_suggestions(db: Session = Depends(get_db)):
 @router.websocket("/ws/buses")
 async def websocket_buses(websocket: WebSocket):
     """
-    Ce que fait cette fonction :
-    -----------------------------
+    
     Endpoint WebSocket `/ws/buses`.
     Accepte la connexion du navigateur, transmet immédiatement la liste complète de tous les bus en circulation (`snapshot`),
     puis s'abonne au canal Redis Pub/Sub `bus_updates` pour pousser en direct chaque déplacement de véhicule.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Permet l'affichage dynamique fluide et en temps réel de la flotte sur la carte Leaflet sans aucun rafraîchissement de page.
     """
     await websocket.accept()

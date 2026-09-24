@@ -15,14 +15,11 @@ from app.api.routes import router as api_router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
-    Ce que fait cette fonction :
-    -----------------------------
+
     Gestionnaire du cycle de vie de l'application (Lifespan Context Manager).
     Au démarrage (`startup`), elle vérifie et crée les tables dans PostgreSQL si elles n'existent pas encore.
     À l'arrêt (`shutdown`), elle libère les ressources et connexions actives.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Garantit que la base de données relationnelle est prête à recevoir des requêtes dès que le serveur Web s'allume.
     """
     try:
@@ -62,13 +59,10 @@ app.include_router(api_router, prefix="")
 @app.get("/", tags=["Health"])
 def root():
     """
-    Ce que fait cette fonction :
-    -----------------------------
+
     Contrôleur de la route racine HTTP GET `/`.
     Renvoie un document JSON synthétique avec le statut "running" du serveur backend et les URLs d'accès aux endpoints.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Sert de test de santé (Health Check) pour vérifier la disponibilité de l'API et accéder à la documentation OpenAPI Swagger (`/docs`).
     """
     return {

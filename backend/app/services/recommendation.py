@@ -55,8 +55,7 @@ def _build_candidate(
     destination_stop_id: str,
 ) -> Optional[BusCandidate]:
     """
-    Ce que fait cette fonction :
-    -----------------------------
+
     Construit et évalue un bus en analysant son routage vectoriel directionnel :
     1. Vérifie si la ligne du bus dessert l'arrêt de destination.
     2. Identifie si l'arrêt de destination est EN AMONT (Trajet Direct) ou EN AVAL (Déjà dépassé).
@@ -226,8 +225,7 @@ def compute_recommendations(
     redis: redis_lib.Redis,
 ) -> RecommendationResponse:
     """
-    Ce que fait cette fonction :
-    -----------------------------
+
     Moteur principal de recommandation et de réservation de transport :
     1. Récupère tous les bus en mémoire vive Redis.
     2. Analyse le sens de déplacement et sépare les bus directs des bus nécessitant un demi-tour au terminus.
@@ -235,8 +233,6 @@ def compute_recommendations(
     4. Calcule le score pondéré final pour chaque candidat (plus petit score = meilleur bus).
     5. Trie et réserve de manière atomique un siège sur le meilleur bus disponible dans Redis.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Garantit l'attribution prioritaire des bus directs se déplaçant vers la destination de l'étudiant
     et informe en toute transparence si un demi-tour au terminus est requis.
     """

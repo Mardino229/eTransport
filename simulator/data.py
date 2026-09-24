@@ -39,7 +39,7 @@ except (ModuleNotFoundError, ImportError):
         else:
             raise RuntimeError(f"Fichier dataset.py introuvable aux emplacements attendus.")
 
-# ─── Paramètres Physiques & Temporels du Simulateur IoT 
+# Paramètres Physiques & Temporels du Simulateur IoT 
 GPS_UPDATE_INTERVAL = 2  # Intervalle de rafraîchissement des télémétries GPS (secondes)
 BUS_SPEED_KMH = 32.0     # Vitesse moyenne de circulation des bus (km/h)
 

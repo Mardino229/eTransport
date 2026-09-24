@@ -1,5 +1,5 @@
 """
-Gestionnaire de connexions aux bases de données PostgreSQL et Redis pour eTransport MTDI Bénin.
+Gestionnaire de connexions aux bases de données PostgreSQL et Redis.
 """
 
 from sqlalchemy import create_engine
@@ -23,14 +23,11 @@ redis_client = redis_lib.Redis.from_url(settings.REDIS_URL, decode_responses=Tru
 
 def get_db():
     """
-    Ce que fait cette fonction :
-    -----------------------------
+
     Générateur de dépendance (Dependency Provider) FastAPI pour les sessions de base de données.
     Instancie une nouvelle session SQLAlchemy `SessionLocal()`, la met à disposition de l'endpoint,
     et garantit sa fermeture automatique (`db.close()`) une fois le traitement terminé.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Assure une gestion propre, sécurisée et sans fuite de connexions à la base de données relationnelle PostgreSQL.
     """
     db = SessionLocal()
@@ -42,12 +39,9 @@ def get_db():
 
 def get_redis():
     """
-    Ce que fait cette fonction :
-    -----------------------------
+
     Fournisseur de dépendance FastAPI qui retourne l'instance partagée du client Redis synchrone.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Permet aux endpoints API (recommandation, capacité live) d'accéder instantanément au cache en mémoire vive Redis.
     """
     return redis_client

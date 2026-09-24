@@ -1,5 +1,5 @@
 """
-Services décisionnels et statistiques analytiques pour eTransport MTDI Bénin.
+Services décisionnels et statistiques analytiques.
 
 Fournit les calculs de capacité en temps réel, l'analyse de fréquentation des arrêts,
 le classement des lignes et les algorithmes de proposition d'optimisation.
@@ -25,13 +25,10 @@ from app.schemas import (
 
 def get_all_buses_live(redis: redis_lib.Redis) -> List[BusLiveSchema]:
     """
-    Ce que fait cette fonction :
-    -----------------------------
+
     Lit directement la mémoire Redis en effectuant un `KEYS bus:*` (en excluant les clés de réservation),
     récupère la télémétrie Hash de chaque véhicule et construit la liste des objets `BusLiveSchema`.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Fournit l'API `/api/v1/buses/live` en réponse ultra-rapide (lecture RAM) pour le rafraîchissement
     de la carte GPS et le suivi du taux d'occupation des bus.
     """
@@ -72,14 +69,11 @@ def get_all_buses_live(redis: redis_lib.Redis) -> List[BusLiveSchema]:
 
 def get_stop_analytics(stop_id: str, db: Session) -> StopAnalyticsSchema:
     """
-    Ce que fait cette fonction :
-    -----------------------------
+
     Interroge la table SQL `passenger_flux` pour un arrêt donné sur la fenêtre des 24 dernières heures,
     calcule la somme des étudiants montés, descendus, le nombre d'étudiants actuellement en attente,
     et estime le temps moyen d'attente à quai.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Permet de suivre en détail la congestion à chaque station universitaire (ex: Campus UAC, Étoile Rouge)
     et de mesurer le temps de prise en charge des étudiants par les bus.
     """
@@ -120,14 +114,11 @@ def get_stop_analytics(stop_id: str, db: Session) -> StopAnalyticsSchema:
 
 def get_top5_routes(db: Session) -> List[TopRouteSchema]:
     """
-    Ce que fait cette fonction :
-    -----------------------------
-    Exécute une requête d'agrégation SQL complexe croisant les tables `buses`, `routes` et `passenger_flux`
+
+    Exécute une requête d'agrégation SQL croisant les tables `buses`, `routes` et `passenger_flux`
     pour extraire les 5 itinéraires ayant enregistré le plus grand nombre de voyageurs sur 24h,
     tout en calculant leur taux de saturation théorique.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Alimente la section "Top 5 des Lignes" du tableau de bord de supervision pour visualiser instantanément
     les axes de transport les plus sollicités de la métropole.
     """
@@ -183,16 +174,13 @@ def get_top5_routes(db: Session) -> List[TopRouteSchema]:
 
 def get_optimization_suggestions(db: Session) -> OptimizationSuggestionsResponse:
     """
-    Ce que fait cette fonction :
-    -----------------------------
+
     Analyse l'ensemble des métriques d'affluence SQL sur 24 heures pour :
     1. Détecter les lignes surchargées (proposer d'ajouter des bus ou rapprocher les départs).
     2. Détecter les lignes sous-fréquentées (proposer des réallocations ou fusions).
     3. Identifier les points chauds (hotspots de congestion).
     4. Renvoyer un rapport structuré avec les créneaux de pointe.
 
-    Utilité pour l'application globale :
-    ------------------------------------
     Constitue le cœur du cas d'usage n°5 (Optimisation et régulation). Il fournit des recommandations
     chiffrées et exploitables aux régulateurs du transport universitaire pour rééquilibrer la flotte.
     """
