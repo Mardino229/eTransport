@@ -85,7 +85,7 @@ Analyse les données du réseau et propose des actions chiffrées :
 
 1. **Auto-hébergement du serveur OSRM** : Le projet utilise l'API publique d'OSRM (`router.project-osrm.org`) pour calculer les tracés routiers réels sur la carte et dans le simulateur. Avec plus de temps, héberger une instance OSRM locale dans un conteneur Docker (avec le fichier OpenStreetMap du Bénin) permettrait d'éviter les limites de requêtes de l'API publique et de réduire la latence des trajets à quelques millisecondes.
 2. **Gestion du mode hors-ligne web** : Conserver en cache local (LocalStorage / Service Worker) les derniers horaires chargés pour qu'un étudiant sans connexion réseau à l'arrêt puisse toujours consulter les informations de passage.
-3. **Option boîtier IoT vs application chauffeur** : Le choix d'un boîtier GPS autonome garantit un envoi continu et passif des positions (toutes les 2s) sans dépendre d'une action du chauffeur. Une application sur tablette chauffeur aurait permis la saisie d'incidents (bouchons, pannes), mais aurait introduit un risque d'oubli d'activation.
+3. **Option boîtier IoT vs application chauffeur** : Le choix d'un boîtier GPS autonome garantit un envoi continu et passif des positions (toutes les 2s) sans dépendre d'une action du chauffeur. Une application sur tablette chauffeur aurait permis la saisie d'incidents (bouchons, pannes).
 
 ### 2. Dette technique
 
