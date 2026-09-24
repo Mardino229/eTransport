@@ -1,164 +1,149 @@
-# Test Technique MTDI Bénin — Optimisation du Transport Universitaire (COUS-AC)
+# 🚌 eTransport MTDI Bénin — Transport Universitaire (COUS-AC)
 
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.109-009688?logo=fastapi)](https://fastapi.tiangolo.com)
-[![PostGIS](https://img.shields.io/badge/PostGIS-15--3.3-336791?logo=postgresql)](https://postgis.net)
-[![Redis](https://img.shields.io/badge/Redis-7.0-DC382D?logo=redis)](https://redis.io)
-[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev)
-[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker)](https://www.docker.com)
+> **Projet de Test Technique** — Application de suivi des bus en temps réel, de réservation de siège et d'aide à la décision pour le réseau de transport de l'Université d'Abomey-Calavi (COUS-AC).
 
-> **Projet de Test Technique**
 ---
 
-## 💻 Instructions d'Installation et Lancement en Local
+## 📋 Sommaire
+1. [Présentation du Projet](#-présentation-du-projet)
+2. [Comment Lancer le Projet en Local](#-comment-lancer-le-projet-en-local)
+3. [Données et Hypothèses de Simulation](#-données-et-hypothèses-de-simulation)
+4. [Explication des 5 Cas d'Usage](#-explication-des-5-cas-dusage)
+5. [Pour aller plus loin](#-pour-aller-plus-loin)
 
-### 1. Préréquis
-- **Docker** ($\ge 24.0$) et **Docker Compose** ($\ge 2.20$)
-- **Git**
+---
 
-### 2. Procédure de lancement
+## 🌟 Présentation du Projet
+
+Le but de cette application est de résoudre deux problèmes fréquents dans le transport universitaire :
+1. **Pour les étudiants** : Savoir exactement quel bus prendre, dans combien de temps il arrive, et s'il reste de la place à bord.
+2. **Pour les gestionnaires du réseau** : Identifier les lignes surchargées aux heures de pointe et savoir où ajouter des bus.
+
+---
+
+## 💻 Comment Lancer le Projet en Local
+
+### 1. Prérequis
+Vous devez simplement avoir **Docker** et **Docker Compose** installés sur votre machine.
+
+### 2. Procédure rapide
 
 ```bash
-# 1. Cloner le dépôt
-git clone <URL_DU_REPO>
-cd etransport
+# 1. Cloner le projet depuis GitHub
+git clone git@github.com:Mardino229/eTransport.git
+cd eTransport
 
-# 2. Lancer l'ensemble des services via Docker Compose
+# 2. Démarrer toute l'application avec Docker
 docker compose up --build
 ```
 
-### 3. Accès aux interfaces et APIs
+### 3. Accès aux pages
 
-| Service | URL | Description |
+| Élément | Adresse | Description |
 |---|---|---|
-| **Tableau de Bord Frontend** | [http://localhost:3000](http://localhost:3000) | Application React + Leaflet (Carte live & Analytics) |
-| **Documentation API (Swagger)** | [http://localhost:8000/docs](http://localhost:8000/docs) | Endpoints REST interactifs |
-| **WebSocket Temps Réel** | `ws://localhost:8000/ws/buses` | Flux direct de télémétrie des bus |
+| **Site Web (Frontend)** | [http://localhost:3000](http://localhost:3000) | La carte en direct et le tableau de bord |
+| **Documentation API (Backend)** | [http://localhost:8000/docs](http://localhost:8000/docs) | Liste et test de toutes les routes de l'API |
 
 ---
 
-## 📊 Hypothèses de Simulation & Données (Section 2.1)
+## 📊 Données et Hypothèses de Simulation (Section 2.1)
 
-Le réseau universitaire de référence est modélisé à partir de la cartographie réelle du **COUS-AC (Université d'Abomey-Calavi)** :
+Comme aucune donnée réelle n'était fournie, un simulateur génère automatiquement le déplacement des bus et l'affluence des étudiants :
 
-| Paramètre | Valeur simulée | Justification & Détails |
-|---|---|---|
-| **Flotte de bus** | **35 bus** (Capacité : 50 à 60 places) | Adapté à la taille de la flotte universitaire du COUS-AC. |
-| **Réseau routier** | **14 lignes** desservant **15 arrêts** | Couvre Abomey-Calavi, Cotonou (ENEAM, Akpakpa, Ganhi, Fidjrossè), Godomey, Porto-Novo, Tori, etc. |
-| **Fréquence de rafraîchissement** | Télémétrie GPS toutes les **2 secondes** | Assure une expérience temps réel fluide sur la carte sans engorger le réseau. |
-| **Mode de télémétrie** | **Boîtier IoT autonome** (GPS/4G) | Télémétrie passive émise automatiquement sans intervention humaine du chauffeur (2s). |
-| **Volumétrie moyenne** | **~5 000 passagers / jour** | Hypothèse de charge quotidienne basée sur la population étudiante active. |
-| **Profils d'affluence (Rush)** | **Matin (06h30–09h10)** : $\times 3.0$<br>**Soir (16h00–19h30)** : $\times 2.8$ | Modélise les départs vers les amphis le matin et le retour vers les logements le soir. |
+- **35 bus** en circulation (de 50 à 60 places chacun).
+- **14 lignes** desservant **15 arrêts** principaux (UAC Campus, Étoile Rouge, ENEAM, Akpakpa, Godomey, Porto-Novo, Tori, etc.).
+- **Télémétrie automatique** : Les bus envoient leur position GPS toutes les **2 secondes** (comme des boîtiers GPS embarqués).
+- **Heures de pointe** : L'affluence d'étudiants est multipliée par **3 le matin (06h30–09h10)** vers les cours et par **2.8 le soir (16h00–19h30)** vers les logements.
 
 ---
 
-## 🎯 Validation des 5 Cas d'Usage Métier
+## 🎯 Explication des 5 Cas d'Usage
 
-### Cas d'Usage 1 — Gestion de Capacité
-- **Endpoint** : `GET /api/v1/buses/live`
-- **Mécanisme** : Pour chaque bus, le système calcule le taux de remplissage ($\frac{\text{passagers}}{\text{capacité}} \times 100$) et les places restantes en temps réel depuis Redis.
+### 1. Gestion de Capacité
+- **Ce que ça fait** : Affiche pour chaque bus le nombre de places libres, le nombre de passagers à bord et le pourcentage de remplissage.
+- **Endpoint API** : `GET /api/v1/buses/live`
 
-### Cas d'Usage 2 — Analyse des Arrêts
-- **Endpoint** : `GET /api/v1/stops/{stop_id}/analytics`
-- **Mécanisme** : Calcule les flux cumulés sur 24h (montés, descendus, en attente) et le temps moyen d'attente estimé à quai.
+### 2. Analyse des Arrêts
+- **Ce que ça fait** : Calcule pour un arrêt donné le nombre total d'étudiants qui sont montés, descendus, ceux qui restent à quai et le temps d'attente moyen.
+- **Endpoint API** : `GET /api/v1/stops/{stop_id}/analytics`
 
-### Cas d'Usage 3 — Top 5 des Itinéraires
-- **Endpoint** : `GET /api/v1/routes/top5`
-- **Mécanisme** : Requête d'agrégation SQL identifiant les 5 lignes les plus empruntées avec leur nombre de passagers et leur taux d'occupation.
+### 3. Top 5 des Itinéraires
+- **Ce que ça fait** : Donne les 5 lignes les plus utilisées de la journée avec le nombre d'étudiants transportés et leur niveau d'occupation.
+- **Endpoint API** : `GET /api/v1/routes/top5`
 
-### Cas d'Usage 4 — Recommandation Intelligente & Cas Limite
-- **Endpoint** : `POST /api/v1/recommendation`
-- **Fonction de Score Explicite (Score le plus petit = Meilleur bus)** :
-  $$\text{Score} = 0.35 \times \hat{\text{ETA}} + 0.25 \times \hat{\text{Marche}} + 0.25 \times \hat{\text{Trajet}} + 0.15 \times \text{Remplissage} + \text{Pénalité}_{\text{demi-tour}}$$
-  - **Pondérations** : L'ETA ($0.35$) et les contraintes de déplacement ($0.50$) sont prioritaires pour l'étudiant.
-  - **Gestion dynamique** : Détecte si le bus va vers la destination ou nécessite un demi-tour au terminus ($+0.15$ de pénalité).
-- **Traitement du cas limite (200 requêtes simultanées — Herding Effect)** :  
-  L'attribution de siège utilise un `DECR` **atomique dans Redis** (`bus:<id>:reserved_seats`, TTL 60s). Si le compteur tombe à 0, le système bascule automatiquement et de manière transparente le 201ᵉ étudiant vers le bus candidat alternatif suivant.
+### 4. Recommandation Intelligente & Cas des 200 Étudiants Simultanés
+- **Ce que ça fait** : L'étudiant entre sa position et sa destination. Le système calcule une note pour chaque bus selon 4 critères :
+  - Le temps d'arrivée à l'arrêt (ETA).
+  - La distance de marche jusqu'à l'arrêt.
+  - La durée totale du trajet.
+  - Le niveau de remplissage du bus (+ une pénalité si le bus doit faire un demi-tour au terminus).
+- **Cas des 200 étudiants simultanés** : Pour éviter que 200 étudiants réservent la même place au même moment, nous utilisons un compteur de places réservables dans **Redis**. Dès qu'un étudiant choisit un bus, une place est bloquée pendant 60 secondes. Si le bus devient plein, le 201ᵉ étudiant est automatiquement orienté vers le bus suivant.
+- **Endpoint API** : `POST /api/v1/recommendation`
 
-### Cas d'Usage 5 — Optimisation d'Itinéraire
-- **Endpoint** : `GET /api/v1/optimizations/suggestions`
-- **Mécanisme** : Analyse la saturation réelle ($\frac{\text{passagers}}{\text{capacité offerte}}$) et la pression par bus ($\frac{\text{attente}}{\text{nombre de bus}}$) pour générer des actions chiffrées :
-  - `add_bus` : Si Saturation $> 80\%$ ou Pression $> 5$ étudiants/bus.
-  - `reschedule` : Si Saturation entre $60\%$ et $80\%$.
-  - `reallocate_bus` : Si Saturation $< 30\%$ et flotte $\ge 2$ bus.
-  - `merge_lines` : Si très faible fréquentation ($< 50$ passagers/24h).
+### 5. Optimisation d'Itinéraire (Aide à la Décision)
+- **Ce que ça fait** : Analyse le réseau et propose 4 types d'actions concrètes avec des chiffres à l'appui :
+  - **Ajouter des bus** sur une ligne si elle est saturée ($>80\%$) ou si l'attente est trop forte.
+  - **Rapprocher les départs** si la charge est modérée ($60\%$ à $80\%$).
+  - **Réallouer un bus** vers une autre ligne si une ligne a trop de bus pour peu de voyageurs.
+  - **Fusionner des lignes** si une ligne est presque vide ($<50$ passagers/jour).
+- **Endpoint API** : `GET /api/v1/optimizations/suggestions`
 
 ---
 
 ## 🚀 Pour aller plus loin
 
-### 1. Recul sur vos choix
-*Qu'aurions-nous fait différemment dès le départ, en connaissant ce que nous savons maintenant ?*
+### 1. Recul sur mes choix
+*Ce que j'aurais fait différemment avec un peu plus d'expérience ou de temps :*
 
-1. **Architecture de Messagerie IoT (Redis Streams vs Pub/Sub)** :  
-   Nous avons utilisé Redis Pub/Sub pour diffuser les positions GPS. Pub/Sub étant un mode *fire-and-forget* éphémère, nous utiliserions **Redis Streams** ou **NATS** pour garantir la persistance des séries temporelles GPS et faciliter le rejeu de données en cas de coupure du backend.
-2. **Calcul d'itinéraires sur graphe routier (OSRM / pgRouting)** :  
-   Les ETAs et trajectoires entre arrêts s'appuient sur une interpolation Haversine. Dès le départ, l'intégration du réseau OpenStreetMap de la métropole béninoise via un moteur OSRM dédié aurait permis d'obtenir des temps de parcours tenant compte du réseau routier réel.
-3. **Isolation des conteneurs de simulation** :  
-   Au lieu d'un simulateur unique gérant les 35 bus dans une boucle `asyncio`, nous isolerions les bus sous forme de micro-services indépendants pour modéliser plus fidèlement des boîtiers IoT autonomes.
-4. **Choix du mode de Géolocalisation (Boîtier IoT autonome vs Écran/App Chauffeur)** :  
-   - **Architecture retenue (Boîtier IoT autonome embarqué)** : La position GPS est émise de façon 100% passive et automatique dès le démarrage du bus. Cela garantit une haute fréquence constante (2s) et zéro dépendance vis-à-vis d'une manipulation humaine.
-   - **Impact si la géolocalisation provenait d'un écran/smartphone Chauffeur** :
-     - *Compromis & Risques* : Dépendance humaine (risque d'oubli d'activation de l'app, batterie faible, fermeture accidentelle) et baisse de fréquence GPS (5–15s pour préserver la batterie).
-     - *Opportunités métier* : Permettrait en contrepartie au chauffeur d'enrichir les données en déclarant manuellement les départs de terminus, les pannes, les bouchons ou la prise en charge des étudiants.
+1. **Utiliser une vraie carte routière (OSRM / OpenStreetMap)** : Actuellement, les bus avancent en ligne droite simulée entre les arrêts. En intégrant un moteur de carte routière comme OSRM, les temps de trajet calculés tiendraient compte des vrais tournants et des rues de Cotonou et Calavi.
+2. **Gestion du mode hors-ligne sur mobile** : Si un étudiant perd sa connexion 4G à l'arrêt de bus, l'application devrait garder en mémoire les derniers horaires chargés pour qu'il ne se retrouve pas sans information.
+3. **Application Chauffeur vs Boîtier GPS** :
+   - *Choix actuel (Boîtier GPS autonome)* : Envoie la position automatiquement sans que le chauffeur n'ait rien à faire. C'est simple et fiable.
+   - *Alternative (Écran/Application Chauffeur)* : Si le chauffeur avait une application sur tablette, il pourrait signaler manuellement des pannes ou des bouchons, mais il y aurait un risque qu'il oublie d'allumer l'application.
 
 ---
 
 ### 2. Dette technique
-*Quelles dettes techniques avons-nous volontairement acceptées ?*
+*Les simplifications acceptées pour rendre le projet dans les temps :*
 
-| Dette Technique | Justification métier / Arbitrage | Plan d'amélioration |
-|---|---|---|
-| **Absence d'Authentification (JWT)** | Focalisation sur la logique algorithmique (recommandation & régulation). | Ajouter un middleware FastAPI OAuth2 / JWT. |
-| **Heuristique d'attente à quai** | Estimation du temps d'attente basée sur le nombre de personnes bloquées. | Remplacer par un modèle de file d'attente M/M/1. |
-| **Plafond de fallback des rotations** | Gérer le démarrage à froid avant l'enregistrement du premier trajet. | Initialiser les rotations d'après la grille horaire officielle. |
-| **Couverture de tests unitaires** | Tests de bout en bout manuels validés. | Mettre en place des tests Pytest et Jest automatisés dans la CI/CD. |
+- **Pas de système de connexion (Login / Mot de passe)** : Pour ce test, les endpoints sont ouverts. En situation réelle, il faudrait ajouter une connexion avec token (JWT).
+- **Données simulées basiques pour le trafic** : La vitesse des bus est fixe (32 km/h). Dans la réalité, la circulation varie selon les embouteillages.
+- **Tests automatisés simples** : Le projet a été testé manuellement. Il faudrait ajouter des tests unitaires (avec Pytest) pour vérifier automatiquement le code avant chaque mise à jour.
 
 ---
 
-### 3. Passage à l'échelle
-*Comment la solution tiendrait-elle à 50 000 étudiants et 300 bus en heure de pointe ? Qu'est-ce qui casserait en premier ?*
+### 3. Passage à l'échelle (50 000 étudiants et 300 bus)
 
-#### Ce qui casserait en premier :
-1. **La connexion WebSocket FastAPI (single-process)** : Gérer 50 000 connexions ouvertes simultanément ferait exploser la RAM du conteneur Backend lors du broadcast des positions.
-2. **La base de données PostgreSQL lors des écritures de flux** : Les insertions synchrones dans `passenger_flux` créeraient une contention de verrous d'écriture sur le disque.
+#### Ce qui risquerait de bloquer en premier :
+1. **Les notifications en direct (WebSockets)** : Envoyer la position de 300 bus en même temps à 50 000 étudiants sur un seul serveur va ralentir l'application.
+2. **La base de données PostgreSQL** : Si 300 bus enregistrent des passages en même temps, la base de données risque d'être submergée par les écritures.
 
-#### Architecture cible pour passer la charge :
-- **Découplage des WebSockets** : Utiliser un cluster **Centrifugo** ou **Socket.IO** dédié avec système de "Rooms" par zone géographique (les étudiants ne reçoivent que les bus de leur secteur).
-- **Ingestion Asynchrone par File de Messages (NATS / Kafka)** : Tamponner les insertions de flux voyageurs et écrire par micro-batches toutes les 15 secondes en base.
-- **Cluster Redis Shardé** : Répartition des clés de réservation et de télémétrie sur un cluster Redis à 3 nœuds masters.
-
----
-
-### 4. Données manquantes
-*Quelles données supplémentaires demanderiez-vous au terrain, et quelle décision permettraient-elles de prendre ?*
-
-1. **Matrice Origine-Destination (OD) réelle des étudiants** :  
-   *Collecte* : Sondage via l'application mobile et données d'inscription par faculté.  
-   *Décision* : Réallouer la flotte entre les lignes avant même le début du semestre.
-2. **Données de congestion routière temps réel (Trafic)** :  
-   *Collecte* : Intégration d'une API de trafic (Google Maps / HERE / Waze).  
-   *Décision* : Ajuster dynamiquement les ETAs selon les embouteillages de l'axe Akpakpa–Godomey.
-3. **Comptage automatique aux portes des bus (Capteurs APC)** :  
-   *Collecte* : Capteurs optiques ou infrarouges installés aux portes des bus.  
-   *Décision* : Obtenir le taux d'occupation réel exact sans passer par une estimation de simulation.
-4. **Emplois du temps & Calendrier des examens universitaires** :  
-   *Collecte* : API des services académiques de l'UAC.  
-   *Décision* : Anticiper la sortie massive des étudiants à la fin d'un examen et pré-positionner des bus de réserve 15 minutes avant.
+#### Solutions simples à mettre en place :
+- **Séparer les serveurs** : Utiliser un serveur dédié uniquement à la diffusion des positions GPS (ex: Socket.IO ou Centrifugo).
+- **Filtrer par zone géographique** : Un étudiant situé à Abomey-Calavi n'a pas besoin de recevoir les positions des bus qui circulent à Porto-Novo.
+- **Regrouper les écritures en base** : Au lieu d'écrire dans PostgreSQL à chaque seconde, regrouper les données en mémoire et les sauvegarder toutes les 15 ou 30 secondes.
 
 ---
 
-### 5. Mise en production
-*Quelle serait votre première itération avec de vrais étudiants et de vrais chauffeurs ?*
+### 4. Données manquantes du terrain
 
-#### Périmètre du Pilote (MVP — 4 semaines)
-- **Ligne test** : Ligne 1 (Akpakpa $\leftrightarrow$ Campus UAC).
-- **Ressources** : 5 bus équipés de smartphones/boîtiers GPS bas coût, 500 étudiants bêta-testeurs.
+Pour rendre le système encore plus précis sur le terrain, je demanderais :
 
-#### Étapes du Déploiement :
-1. **Semaine 1 (Chauffeurs)** : Installation des boîtiers GPS sur les 5 bus et mise à disposition d'une interface chauffeur simplifiée (départ terminus, déclaration d'avarie).
-2. **Semaine 2 (Étudiants)** : Déploiement du frontend sous forme de **PWA (Progressive Web App)** accessible via QR Code aux arrêts sans installation lourde.
-3. **Semaine 3–4 (Expérimentation & Calibrage)** : Mesure du taux de conversion (étudiants ayant suivi la recommandation) et ajustement des poids du score de recommandation.
-4. **Indicateurs de Succès (KPIs)** :
-   - Réduction de **20%** du temps d'attente moyen à l'arrêt Akpakpa.
-   - Augmentation du taux de remplissage des bus de la Ligne 1 de **60% à 80%**.
-# eTransport
+1. **Les emplois du temps officiels de l'UAC** : Pour savoir à quelle heure précise les cours et les examens finissent, et envoyer des bus juste avant la sortie des amphis.
+2. **L'historique des cartes d'étudiants** : Pour connaître les trajets les plus fréquents (ex: combien d'étudiants font le trajet Godomey $\rightarrow$ UAC tous les matins).
+3. **Les données de météo locale** : Lorsqu'il pleut à Cotonou ou Calavi, l'affluence aux arrêts couverts augmente fortement.
+
+---
+
+### 5. Mise en production (Première itération sur le terrain)
+
+Si je devais tester l'application en vrai avec des étudiants et des chauffeurs, voici comment je procèderais en **3 étapes simples** :
+
+1. **Étape 1 : Tester sur une seule ligne (ex: Ligne Akpakpa $\rightarrow$ UAC avec 5 bus)**
+   - Équiper 5 bus avec des boîtiers GPS bas coût.
+   - Demander à 100 étudiants de cette ligne de tester l'application pendant 2 semaines.
+2. **Étape 2 : Recueillir les avis et corriger les bugs**
+   - Vérifier si les temps d'arrivée affichés (ETA) correspondent bien à la réalité.
+   - Demander aux étudiants si les bus recommandés avaient bien des places libres.
+3. **Étape 3 : Déployer progressivement sur tout le réseau**
+   - Ajouter les 13 autres lignes et les 30 autres bus une fois que la première ligne fonctionne parfaitement.
