@@ -90,7 +90,7 @@ Analyse les données du réseau et propose des actions chiffrées :
 ### 2. Dette technique
 
 - **Authentification** : Les endpoints de l'API sont actuellement ouverts pour simplifier les tests du prototype. Une gestion par jetons JWT devra être ajoutée pour sécuriser les accès.
-- **Modèle de trafic routier** : La vitesse des bus est fixe (32 km/h en moyenne). Le modèle ne prend pas encore en compte les variations fines d'embouteillages par tronçon. 
+- **Modèle de trafic routier** : La vitesse des bus est fixe (32 km/h en moyenne). Le modèle ne prend pas encore en compte les variations fines d'embouteillages par tronçon. De plus les estimations sont faites à partir de données simulés (profils d'affluence) et non de données réelles collectées sur le terrain. Il faudrait d'abord collecter des données réelles pour avoir des estimations plus justes.
 - **Tests automatisés** : Les validations ont été effectuées manuellement et via des requêtes de test. L'ajout d'une suite de tests automatisés (Pytest) sécurisera les futures évolutions.
 
 ### 3. Passage à l'échelle (50 000 étudiants et 300 bus)
@@ -109,6 +109,6 @@ Analyse les données du réseau et propose des actions chiffrées :
 
 ### 5. Mise en production (Première itération sur le terrain)
 
-1. **Phase 1 (Pilote sur 1 ligne)** : Lancer le système et équiper les bus sur des lignes servant de tests pour obtenir des données terrains réelles.
-2. **Phase 2 (Ajustements)** : En fonction des données collectées améliorer les estimations effectués pour avoir des données plus juste et donc des recommandation pertinentes. 
+1. **Phase 1 (Pilote sur 1 ligne)** : Mettre en place une ou plusieurs lignes tests et équiper les bus sur ces lignes pour obtenir des données réelles. 
+2. **Phase 2 (Ajustements)** : En fonction des données collectées améliorer les estimations effectués pour avoir des données plus juste et donc des recommandation pertinentes.
 3. **Phase 3 (Déploiement général)** : Étendre le système aux autres lignes une fois la première phase validée. 
