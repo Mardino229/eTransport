@@ -109,6 +109,6 @@ Analyse les données du réseau et propose des actions chiffrées :
 
 ### 5. Mise en production (Première itération sur le terrain)
 
-1. **Phase 1 (Pilote sur 1 ligne)** : Équiper 5 bus sur la ligne Akpakpa - UAC et ouvrir la plateforme à un groupe restreint d'étudiants.
-2. **Phase 2 (Ajustements)** : Vérifier l'écart entre les ETAs affichés et le terrain, puis ajuster les coefficients de la fonction de score.
-3. **Phase 3 (Déploiement général)** : Étendre le système aux autres lignes une fois la première phase validée.
+1. **Phase 1 (Pilote sur 1 ligne)** : Lancer le système et équiper les bus sur des lignes servant de tests pour obtenir des données terrains réelles.
+2. **Phase 2 (Ajustements)** : En fonction des données collectées améliorer les estimations effectués pour avoir des données plus juste et donc des recommandation pertinentes. 
+3. **Phase 3 (Déploiement général)** : Étendre le système aux autres lignes une fois la première phase validée. 

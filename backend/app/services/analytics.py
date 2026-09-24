@@ -316,6 +316,25 @@ def get_optimization_suggestions(db: Session) -> OptimizationSuggestionsResponse
                 )
             )
 
+    # 5. Détection de points de congestion majeurs à partir des arrêts (Hotspots)
+    if stop_stats:
+        top_stop = stop_stats[0]
+        top_waiting = int(top_stop.total_waiting or 0)
+        if top_waiting > 100:
+            suggestions.append(
+                OptimizationAction(
+                    action_type="new_stop",
+                    line_id=None,
+                    description=(
+                        f"Point de congestion majeur détecté à l'arrêt {top_stop.stop_name} "
+                        f"({top_waiting} étudiants en attente sur 24h). "
+                        f"Ajouter un terminus intermédiaire."
+                    ),
+                    metric_value=float(top_waiting),
+                    metric_label=f"Attente cumulée : {top_waiting} étudiants",
+                )
+            )
+
     hotspots = [
         {
             "stop_id": row.stop_id,
