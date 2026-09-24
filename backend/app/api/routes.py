@@ -98,8 +98,7 @@ def get_stop_analytics(stop_id: str, db: Session = Depends(get_db)):
 )
 def get_top5_routes(db: Session = Depends(get_db)):
     """
-    Ce que fait cette fonction :
-    -----------------------------
+
     Point d'entrée REST HTTP GET `/api/v1/routes/top5`.
     Calcule et renvoie le classement des 5 lignes de transport universitaire les plus fréquentées.
 
@@ -119,8 +118,7 @@ def get_recommendation(
     redis: redis_lib.Redis = Depends(get_redis),
 ):
     """
-    Ce que fait cette fonction :
-    -----------------------------
+
     Point d'entrée REST HTTP POST `/api/v1/recommendation`.
     Traite la demande d'un étudiant (position GPS, arrêt de destination), calcule le bus optimal,
     effectue la réservation atomique d'un siège et renvoie le résultat accompagné de 3 bus alternatifs.
@@ -144,8 +142,7 @@ def get_recommendation(
 )
 def get_optimization_suggestions(db: Session = Depends(get_db)):
     """
-    Ce que fait cette fonction :
-    -----------------------------
+
     Point d'entrée REST HTTP GET `/api/v1/optimizations/suggestions`.
     Génère un rapport synthétique contenant les actions d'optimisation préconisées
     (ajout de bus, réajustement des départs, fusion de lignes) et les zones de congestion (hotspots).
@@ -158,7 +155,7 @@ def get_optimization_suggestions(db: Session = Depends(get_db)):
 @router.websocket("/ws/buses")
 async def websocket_buses(websocket: WebSocket):
     """
-    
+
     Endpoint WebSocket `/ws/buses`.
     Accepte la connexion du navigateur, transmet immédiatement la liste complète de tous les bus en circulation (`snapshot`),
     puis s'abonne au canal Redis Pub/Sub `bus_updates` pour pousser en direct chaque déplacement de véhicule.
