@@ -4,7 +4,7 @@ import MapView from "./components/MapView";
 import AnalyticsPanel from "./components/AnalyticsPanel";
 import RecommendationForm from "./components/RecommendationForm";
 import "./index.css";
-
+ 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
 
 function getWsUrl() {
@@ -147,14 +147,10 @@ export default function App() {
     };
   }, [wsConnected]);
 
-  const activeBusesCount = buses.filter((b) => b.passengers_count > 0).length;
-
   return (
     <AppLayout
       activeTab={activeTab}
       setActiveTab={setActiveTab}
-      busesCount={buses.length}
-      activeBusesCount={activeBusesCount}
       wsConnected={wsConnected}
       lastUpdate={lastUpdate}
     >

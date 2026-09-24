@@ -5,15 +5,11 @@ import { useSidebar } from "../context/SidebarContext";
 interface AppSidebarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  busesCount: number;
-  activeBusesCount: number;
-}
+} 
 
 export const AppSidebar: React.FC<AppSidebarProps> = ({
   activeTab,
   setActiveTab,
-  busesCount,
-  activeBusesCount,
 }) => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered, toggleSidebar } = useSidebar();
 
@@ -22,7 +18,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
       id: "map",
       name: "Carte en Direct",
       icon: <Bus className="size-5" />,
-      badge: `${activeBusesCount}/${busesCount}`,
     },
     {
       id: "analytics",
@@ -101,18 +96,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                   </span>
                   {showText && <span>{item.name}</span>}
                 </div>
-
-                {showText && item.badge && (
-                  <span
-                    className={`px-2 py-0.5 text-xs font-semibold rounded-full ${
-                      isActive
-                        ? "bg-brand-100 text-brand-700 dark:bg-brand-500/20 dark:text-brand-300"
-                        : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
-                    }`}
-                  >
-                    {item.badge}
-                  </span>
-                )}
               </button>
             );
           })}

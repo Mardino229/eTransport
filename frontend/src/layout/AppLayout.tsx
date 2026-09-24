@@ -8,8 +8,6 @@ import { Backdrop } from "./Backdrop";
 interface AppLayoutProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  busesCount: number;
-  activeBusesCount: number;
   wsConnected: boolean;
   lastUpdate: string;
   children: React.ReactNode;
@@ -18,8 +16,6 @@ interface AppLayoutProps {
 const LayoutContent: React.FC<AppLayoutProps> = ({
   activeTab,
   setActiveTab,
-  busesCount,
-  activeBusesCount,
   wsConnected,
   lastUpdate,
   children,
@@ -33,8 +29,6 @@ const LayoutContent: React.FC<AppLayoutProps> = ({
       <AppSidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        busesCount={busesCount}
-        activeBusesCount={activeBusesCount}
       />
       <Backdrop />
 
