@@ -1,0 +1,121 @@
+services:
+
+  # PostgreSQL + PostGIS
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: etransport_db
+    restart: unless-stopped
+    environment: 
+      POSTGRES_USER: etransport
+      POSTGRES_PASSWORD: etransport_pass
+      POSTGRES_DB: etransport
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432" 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U etransport -d etransport"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: etransport_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: etransport_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      POSTGRES_USER: etransport
+      POSTGRES_PASSWORD: etransport_pass
+      POSTGRES_SERVER: db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: etransport
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      CORS_ORIGINS: '["http://localhost:3000","http://localhost:5173","http://frontend"]'
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/app:/app/app
+      - ./backend/alembic:/app/alembic
+    develop:
+      watch:
+        - action: sync
+          path: ./backend/app
+          target: /app/app
+        - action: sync
+          path: ./backend/alembic
+          target: /app/alembic
+        - action: rebuild
+          path: ./backend/requirements.txt
+
+  # Simulateur
+  simulator:
+    build:
+      context: ./simulator
+      dockerfile: Dockerfile
+    container_name: etransport_simulator
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: postgresql://etransport:etransport_pass@db:5432/etransport
+    volumes:
+      - ./backend/app:/app/app
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./simulator
+          target: /app
+        - action: rebuild
+          path: ./simulator/requirements.txt
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:8000/api/v1
+        VITE_WS_URL: ws://localhost:8000/ws/buses
+    container_name: etransport_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    develop:
+      watch:
+        - action: rebuild
+          path: ./frontend/src
+        - action: rebuild
+          path: ./frontend/package.json
+
+volumes:
+  postgres_data:

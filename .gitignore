@@ -1,0 +1,53 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Caches & Environments
+.pytest_cache/
+.coverage
+htmlcov/
+.env
+.env.local
+.env.*.local
+venv/
+.venv/
+env/
+ENV/
+
+# Node.js & Bun (Frontend)
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+.bun/
+bun.lockb
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker & Database local volumes
+postgres_data/
+*.db
+*.sqlite
+
+# IDE & Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Python Cache subdirectories
+backend/__pycache__/
+backend/app/__pycache__/
+backend/app/*/__pycache__/
+backend/alembic/__pycache__/
+backend/alembic/*/__pycache__/
+simulator/__pycache__/
