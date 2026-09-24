@@ -99,7 +99,7 @@ Analyse les données du réseau et propose des actions chiffrées :
 - **Solutions envisagées** :
   - Séparer la diffusion WebSocket sur un service dédié (Socket.IO ou Centrifugo).
   - Filtrer les données envoyées par zone géographique pour éviter que chaque étudiant ne reçoive la position de l'ensemble de la flotte.
-  - Insérer les flux de passagers par lots (batchs toutes les 15 à 30 secondes) dans PostgreSQL au lieu d'écritures synchrone à chaque arrêt.
+  - Insérer les flux de passagers par lots dans PostgreSQL au lieu d'écritures synchrone à chaque arrêt.
 
 ### 4. Données manquantes du terrain
 
